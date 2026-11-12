@@ -62,18 +62,18 @@ Analyse des résultats (XGBoost et SHAP):
 Après avoir entraîné le modèle XGBoost sur nos 200 plaques virtuelles, voici le poids réel de chaque paramètre dans la prédiction d'une rupture d'onde :
 
 1. pente_dyn (Pente dynamique) : 47,14 %
-2. 
+   
 C'est le facteur numéro un, loin devant les autres. C'est la pente mesurée quand on accélère le rythme progressivement (avec l'effet mémoire déjà intégré).
 
-3. pente_S1_S2 (Pente stationnaire) : 29,29 %
-4. 
+2. pente_S1_S2 (Pente stationnaire) : 29,29 %
+   
 C'est le deuxième critère le plus lourd. Il correspond à la mesure classique sur un battement isolé.
 
-5. indice_memoire (Mémoire cardiaque) : 13,08 %
-6. 
+3. indice_memoire (Mémoire cardiaque) : 13,08 %
+ 
 L'écart entre les deux courbes (la mémoire pure du tissu) joue un rôle réel, mais secondaire.
 
-7. cv_restitution (Vitesse de conduction) : 10,49 %
+4. cv_restitution (Vitesse de conduction) : 10,49 %
    
 Le ralentissement de l'onde électrique pèse moins lourd que prévu dans ce modèle.
 
