@@ -85,16 +85,18 @@ Les valeurs SHAP permettent de voir comment chaque paramètre pousse le cœur ve
 - L'indice de mémoire (13 %) et la vitesse de conduction (10 %) n'agissent pas seuls, mais ils viennent nuancer la décision : sur certaines plaques à la limite, une forte mémoire suffit à faire basculer l'onde dans la rupture.
 
 
-Ce qu'il faut retenir de nos simulations
-Dans notre configuration sur 200 plaques 2D, la pente de restitution reste le moteur principal de la cassure électrique. Toutefois, ce n'est pas la vieille pente statique seule (S1-S2) qui domine, mais bien la pente dynamique (47 %), c'est-à-dire la réaction du cœur quand il est déjà fatigué par un rythme rapide. La mémoire cardiaque et la vitesse de conduction complètent le tableau (environ 24 % à elles deux), confirmant qu'un modèle multi-critères prédit mieux l'instabilité qu'un chiffre isolé.
+Ce qu'il faut retenir :
+ - La pente de restitution reste le moteur principal de la cassure électrique. 
+ - Ce n'est pas la vieille pente statique seule (S1-S2) qui domine, mais bien la pente dynamique (47 %), c'est-à-dire la réaction du cœur quand il est déjà fatigué par un rythme rapide.
+ - La mémoire cardiaque et la vitesse de conduction complètent le tableau (environ 24 % à elles deux), confirmant qu'un modèle multi-critères prédit mieux l'instabilité qu'un chiffre isolé.
 
 
 Limites du modèle:
-Modèle 2D simplifié : plaque isotrope sans fibres 3D, sans réseau de Purkinje et sans anatomie de cœur entier.
-Simulation uniquement : mesure la fragmentation d'un front d'onde sur ordinateur, pas une fibrillation ventriculaire clinique.
+ - Modèle 2D simplifié : plaque isotrope sans fibres 3D, sans réseau de Purkinje et sans anatomie de cœur entier.
+ - Simulation uniquement : mesure la fragmentation d'un front d'onde sur ordinateur, pas une fibrillation ventriculaire clinique.
 
 
-Structure du code et exécution
+Structure du code et exécution:
 
 scripts/01_restitution_S1S2.py : Étape 1 (pente stationnaire 1D)
 scripts/02_restitution_dynamique.py : Étape 2 (mémoire et restitution de vitesse 1D)
