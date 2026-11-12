@@ -1,7 +1,6 @@
 La pente de restitution suffit-elle à prédire la rupture d'onde cardiaque ?
-Banc d'essai en simulation 2D (openCARP) avec XGBoost et SHAP.
 
-Le problème médical
+Le problème médical:
 
 Chaque année, 4 à 5 millions de personnes décèdent de mort subite cardiaque. Dans la majorité des cas, ces décès sont la conséquence de la fibrillation ventriculaire (FV).
 
@@ -11,7 +10,7 @@ Pour comprendre les mécanismes invisibles de l'arrêt cardiaque, une formalisat
 
 Cependant, ce critère présente en pratique les mêmes limites que le critère de référence : des cœurs tremblent alors que la règle dit qu'ils ne devraient pas, et des cœurs restent stables alors que la règle dit qu'ils devraient trembler.
 
-L'objectif du projet
+L'objectif du projet:
 
 Le projet répond donc à une question simple : qu'est-ce qui déclenche vraiment la rupture électrique ? La simple pente de départ, ou la mémoire et les caractéristiques du tissu ?
 
@@ -20,16 +19,34 @@ Pour cela, je combine une simulation in silico robuste (openCARP) à un modèle 
 Le protocole en 4 étapes
 
 Étape 1 : Mesurer la pente de restitution (1D)
-On prend un fil de cœur de 2 cm dans openCARP, modèle Ten Tusscher. On fait S1-S2 : des battements réguliers, puis un prématuré. On trace la courbe : durée du battement en fonction du repos. La pente, c'est juste : est-ce que le cœur surréagit ? Pente > 1 = il surréagit. Pente < 1 = il reste calme.
+On prend un fil de cœur de 2 cm dans openCARP (modèle Ten Tusscher).
+On lance un protocole S1-S2 : des battements réguliers, puis un battement prématuré.
+On trace ensuite la durée du battement en fonction du temps de repos.
+
+La pente répond à une question simple : est-ce que le cœur surréagit ?
+* Pente > 1 : il surréagit.
+* Pente < 1 : il reste calme.
 
 Étape 2 : Mesurer la mémoire (1D dynamique)
-Même fil, mais on accélère petit à petit. On compare avec l'étape 1. Si les deux courbes ne se superposent pas, c'est la mémoire : le cœur se souvient des battements d'avant, pas que du dernier. On mesure aussi la restitution de vitesse : l'onde ralentit quand ça va vite.
+On reprend le même fil, mais cette fois on accélère le rythme petit à petit.
+On compare cette courbe avec celle de l'étape 1.
+
+Si les deux courbes ne se superposent pas, c'est la mémoire : le cœur se souvient des battements d'avant, pas uniquement du dernier.
+On mesure aussi la restitution de vitesse, c'est-à-dire à quel point l'onde ralentit quand ça va vite.
 
 Étape 3 : Crash-test en 2D
-On passe sur une plaque 5x5 cm, comme un drap artificiel. On fait 200 plaques différentes : on change un peu les réglages, la vitesse, l'hétérogénéité. Sur chaque plaque, on lance une spirale. Pendant 2 secondes, on regarde : stable ou rupture ? Rupture = la spirale se casse en plusieurs morceaux.
+On passe sur une plaque de 5x5 cm, comme un drap artificiel.
+On fabrique 200 plaques différentes en changeant un peu les réglages, la vitesse et l'hétérogénéité du terrain.
+Sur chaque plaque, on lance une spirale électrique et on observe pendant 2 secondes :
+* Stable : la spirale tourne d'un seul bloc.
+* Rupture : la spirale se casse en plusieurs morceaux.
 
 Étape 4 : Verdict avec XGBoost + SHAP
-On donne les 200 plaques à XGBoost. Il apprend à prédire : cassé ou pas cassé ? Puis SHAP nous dit qui a pesé le plus dans la décision : la pente ? la mémoire ? la vitesse ? C'est ça qui tranche : on voit si la vieille règle de la pente > 1 suffit, ou si la mémoire compte plus.
+On donne les 200 plaques à XGBoost.
+Il apprend à prédire : cassé ou pas cassé ?
+Ensuite, SHAP nous montre qui a pesé le plus dans la décision : la pente, la mémoire ou la vitesse ?
+C'est ce classement qui tranche : on voit si la vieille règle de la pente > 1 suffit, ou si la mémoire et le terrain comptent plus.
+
 
 Cas témoins observés en 2D
 
