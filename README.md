@@ -50,10 +50,14 @@ C'est ce classement qui tranche : on voit si la vieille règle de la pente > 1 s
 
 Cas témoins observés en 2D
 
-C1 - Normal - Pente < 1 - 1 front d'onde à 1500 ms : Tourbillon stable
-C2 - Courant IKs réduit - Pente > 1 - X fronts d'onde à 1500 ms : À observer
-C3 - Pente > 1 + CV constante - Pente > 1 - 1 front d'onde à 1500 ms : Stabilité malgré pente > 1
-C4 - Pente < 1 + Tissu coupé en 2 - Pente < 1 - > 1 front d'onde à 1500 ms : Rupture malgré pente < 1
+| Scénario | Réglage du tissu | Pente max (1D) | Nombre de fronts d'onde à 1500 ms | Verdict |
+| :--- | :--- | :---: | :---: | :--- |
+| **C1** | Normal | `< 1` | `1` | Tourbillon stable |
+| **C2** | Courant \(I_{Ks}\) réduit | `> 1` | `X` | *À observer* |
+| **C3** | Pente > 1 + CV constante | `> 1` | `1` | **Stabilité malgré pente > 1** |
+| **C4** | Pente < 1 + Tissu coupé en 2 | `< 1` | `> 1` | **Rupture malgré pente < 1** |
+
+---
 
 Limites du modèle
 
