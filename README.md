@@ -1,101 +1,66 @@
-# La pente de restitution suffit-elle à prédire la rupture d'onde cardiaque ?
-
+La pente de restitution suffit-elle à prédire la rupture d'onde cardiaque ?
 Banc d'essai en simulation 2D (openCARP) avec XGBoost et SHAP.
 
----
+Le problème médical
 
-## Le problème médical
+Chaque année, 4 à 5 millions de personnes décèdent de mort subite cardiaque. Dans la majorité des cas, ces décès sont la conséquence de la fibrillation ventriculaire (FV).
 
-Chaque année, 4 à 5 millions de personnes décèdent de mort subite cardiaque. Dans la majorité des cas, ces décès sont la conséquence de la **fibrillation ventriculaire (FV)**.
+Pour prévenir ce trouble chez les personnes à haut risque, les médecins implantent un défibrillateur automatique (DAI) pour délivrer un choc salvateur en quelques secondes dès qu'une FV démarre. Mais la décision d'implanter le DAI se base sur un critère de faible sensibilité et spécificité à la FV : la fraction d'éjection (FEVG). Ainsi, beaucoup de morts subites ont lieu alors que la FEVG était normale, et une bonne partie des patients portant un DAI ne déclenche jamais d'arythmie de leur vie.
 
-Pour prévenir ce trouble chez les personnes à haut risque, les médecins implantent un **défibrillateur automatique (DAI)** pour délivrer un choc salvateur en quelques secondes dès qu'une FV démarre. Mais la décision d'implanter le DAI se base sur un critère de **faible sensibilité et spécificité** à la FV : la fraction d'éjection (FEVG). Ainsi, beaucoup de morts subites ont lieu alors que la FEVG était normale, et une bonne partie des patients portant un DAI ne déclenche jamais d'arythmie de leur vie.
-
-Pour comprendre les mécanismes invisibles de l'arrêt cardiaque, une formalisation mathématique des courants électriques a cherché à observer comment la cellule cardiaque cause le trouble rythmique. En s'appuyant sur le modèle de **Nolasco et Dahlen (1968)**, les chercheurs ont identifié un point de bascule précis : dès que la cellule devient trop sensible au raccourcissement de son temps de repos (**pente > 1**), elle perd sa stabilité et entre dans un cycle irrégulier d'alternances.
+Pour comprendre les mécanismes invisibles de l'arrêt cardiaque, une formalisation mathématique des courants électriques a cherché à observer comment la cellule cardiaque cause le trouble rythmique. En s'appuyant sur le modèle de Nolasco et Dahlen (1968), les chercheurs ont identifié un point de bascule précis : dès que la cellule devient trop sensible au raccourcissement de son temps de repos (pente > 1), elle perd sa stabilité et entre dans un cycle irrégulier d'alternances.
 
 Cependant, ce critère présente en pratique les mêmes limites que le critère de référence : des cœurs tremblent alors que la règle dit qu'ils ne devraient pas, et des cœurs restent stables alors que la règle dit qu'ils devraient trembler.
 
----
+L'objectif du projet
 
-## L'objectif du projet
+Le projet répond donc à une question simple : qu'est-ce qui déclenche vraiment la rupture électrique ? La simple pente de départ, ou la mémoire et les caractéristiques du tissu ?
 
-Le projet répond donc à une question simple : **qu'est-ce qui déclenche vraiment la rupture électrique ? La simple pente de départ, ou la mémoire et les caractéristiques du tissu ?**
+Pour cela, je combine une simulation in silico robuste (openCARP) à un modèle ML prédictif (XGBoost) avec SHAP. L'objectif n'est pas de démontrer une capacité à entraîner une IA, mais d'utiliser l'explicabilité (SHAP) pour hiérarchiser le poids réel de chaque mécanisme physiologique dans la cassure de l'onde.
 
-Pour cela, je combine une simulation *in silico* robuste (openCARP) à un modèle ML prédictif (**XGBoost**) avec **SHAP**. L'objectif n'est pas de démontrer une capacité à entraîner une IA, mais d'utiliser l'explicabilité (SHAP) pour hiérarchiser le poids réel de chaque mécanisme physiologique dans la cassure de l'onde.
+Le protocole en 4 étapes
 
----
-
-## Le protocole en 4 étapes
-
-**Étape 1 : Mesurer la pente de restitution (1D)**
+Étape 1 : Mesurer la pente de restitution (1D)
 On prend un fil de cœur de 2 cm dans openCARP, modèle Ten Tusscher. On fait S1-S2 : des battements réguliers, puis un prématuré. On trace la courbe : durée du battement en fonction du repos. La pente, c'est juste : est-ce que le cœur surréagit ? Pente > 1 = il surréagit. Pente < 1 = il reste calme.
 
-**Étape 2 : Mesurer la mémoire (1D dynamique)**
+Étape 2 : Mesurer la mémoire (1D dynamique)
 Même fil, mais on accélère petit à petit. On compare avec l'étape 1. Si les deux courbes ne se superposent pas, c'est la mémoire : le cœur se souvient des battements d'avant, pas que du dernier. On mesure aussi la restitution de vitesse : l'onde ralentit quand ça va vite.
 
-**Étape 3 : Crash-test en 2D**
+Étape 3 : Crash-test en 2D
 On passe sur une plaque 5x5 cm, comme un drap artificiel. On fait 200 plaques différentes : on change un peu les réglages, la vitesse, l'hétérogénéité. Sur chaque plaque, on lance une spirale. Pendant 2 secondes, on regarde : stable ou rupture ? Rupture = la spirale se casse en plusieurs morceaux.
 
-**Étape 4 : Verdict avec XGBoost + SHAP**
+Étape 4 : Verdict avec XGBoost + SHAP
 On donne les 200 plaques à XGBoost. Il apprend à prédire : cassé ou pas cassé ? Puis SHAP nous dit qui a pesé le plus dans la décision : la pente ? la mémoire ? la vitesse ? C'est ça qui tranche : on voit si la vieille règle de la pente > 1 suffit, ou si la mémoire compte plus.
 
----
+Cas témoins observés en 2D
 
-## Cas témoins observés en 2D
+C1 - Normal - Pente < 1 - 1 front d'onde à 1500 ms : Tourbillon stable
+C2 - Courant IKs réduit - Pente > 1 - X fronts d'onde à 1500 ms : À observer
+C3 - Pente > 1 + CV constante - Pente > 1 - 1 front d'onde à 1500 ms : Stabilité malgré pente > 1
+C4 - Pente < 1 + Tissu coupé en 2 - Pente < 1 - > 1 front d'onde à 1500 ms : Rupture malgré pente < 1
 
-| Scénario | Réglage du tissu | Pente max (1D) | Nombre de fronts d'onde à 1500 ms | Verdict |
-| :--- | :--- | :---: | :---: | :--- |
-| **C1** | Normal | `< 1` | `1` | Tourbillon stable |
-| **C2** | Courant \(I_{Ks}\) réduit | `> 1` | `X` | *À observer* |
-| **C3** | Pente > 1 + CV constante | `> 1` | `1` | **Stabilité malgré pente > 1** |
-| **C4** | Pente < 1 + Tissu coupé en 2 | `< 1` | `> 1` | **Rupture malgré pente < 1** |
+Limites du modèle
 
----
+Modèle 2D simplifié : plaque isotrope sans fibres 3D, sans réseau de Purkinje et sans anatomie de cœur entier.
+Simulation uniquement : pas de validation expérimentale animale, uniquement in silico, sans métabolisme ni système nerveux.
+Rupture d'onde ≠ FV clinique : on mesure la fragmentation d'un front d'onde sur ordinateur, pas une fibrillation ventriculaire clinique.
+Pas de prédiction médicale : les études cliniques (comme le suivi sur 6 ans de 74 patients porteurs de DAI) montrent que la pente ne prédit ni la mortalité ni les chocs. Ce dépôt est un banc de test biophysique, pas un outil médical.
 
-## Limites du modèle
+Structure du code et exécution
 
-* **Modèle 2D simplifié :** Plaque isotrope sans fibres 3D, sans réseau de Purkinje et sans anatomie de cœur entier.
-* **Simulation uniquement :** Pas de validation expérimentale animale, uniquement *in silico*, sans métabolisme ni système nerveux.
-* **Rupture d'onde ≠ FV clinique :** On mesure la fragmentation d'un front d'onde sur ordinateur, pas une fibrillation ventriculaire clinique.
-* **Pas de prédiction médicale :** Les études cliniques (comme le suivi sur 6 ans de 74 patients porteurs de DAI) montrent que la pente ne prédit ni la mortalité ni les chocs. Ce dépôt est un banc de test biophysique, pas un outil médical.
+scripts/01_restitution_S1S2.py : Étape 1 (pente stationnaire 1D)
+scripts/02_restitution_dynamique.py : Étape 2 (mémoire et restitution de vitesse 1D)
+scripts/03_cohort_2D.py : Étape 3 (génération et simulation des 200 plaques 2D)
+analysis/count_wavebreaks.py : Comptage des fronts d'onde à 1500 ms
+analysis/train_xgboost_shap.py : Étape 4 (entraînement XGBoost et explication SHAP)
+results/figures/ : Courbes de restitution, mémoire et graphiques SHAP
+results/videos/ : Vidéos des scénarios C1-C4 exportées depuis meshalyzer
 
----
+Prérequis : openCARP, carputils, xgboost, shap.
 
-## Structure du code et exécution
-
-```text
-├── scripts/
-│   ├── 01_restitution_S1S2.py       # Étape 1 : pente stationnaire (1D)
-│   ├── 02_restitution_dynamique.py  # Étape 2 : mémoire et restitution de vitesse (1D)
-│   └── 03_cohort_2D.py              # Étape 3 : génération et simulation des 200 plaques (2D)
-├── analysis/
-│   ├── count_wavebreaks.py          # Comptage des fronts d'onde à 1500 ms
-│   └── train_xgboost_shap.py        # Étape 4 : entraînement XGBoost et explication SHAP
-├── results/
-│   ├── figures/                     # Courbes de restitution, mémoire et graphiques SHAP
-│   └── videos/                      # Vidéos des scénarios C1-C4 exportées depuis meshalyzer
-└── README.md
-```
-
-**Prérequis :** [openCARP](https://opencarp.org), `carputils`, `xgboost`, `shap`.
-
-```bash
-# 1. Mesurer la pente et la mémoire en 1D
+Commandes :
 python3 scripts/01_restitution_S1S2.py
 python3 scripts/02_restitution_dynamique.py
-
-# 2. Lancer les scénarios témoins et les 200 plaques 2D
 python3 scripts/03_cohort_2D.py --mode reference
 python3 scripts/03_cohort_2D.py --mode cohort --n_samples 200
-
-# 3. Compter les ruptures d'onde et lancer XGBoost + SHAP
 python3 analysis/count_wavebreaks.py
 python3 analysis/train_xgboost_shap.py
-```
-
----
-
-## Références
-
-* **Nolasco, J. B., & Dahlen, R. W. (1968).** *A graphic method for the study of alternation in cardiac action potentials.* Journal of Applied Physiology.
-* **Ten Tusscher, K. H., & Panfilov, A. V. (2006).** *Alternans and spiral breakup in a human ventricular tissue model.* American Journal of Physiology.
-* **Qu, Z., Garfinkel, A., Chen, P. S., & Weiss, J. N. (2000).** *Mechanisms of discordant alternans and induction of reentry in simulated cardiac tissue.* Circulation.
