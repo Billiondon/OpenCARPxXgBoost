@@ -59,12 +59,10 @@ Cas témoins observés en 2D
 
 ---
 
-Limites du modèle
-
+Limites du modèle:
 Modèle 2D simplifié : plaque isotrope sans fibres 3D, sans réseau de Purkinje et sans anatomie de cœur entier.
-Simulation uniquement : pas de validation expérimentale animale, uniquement in silico, sans métabolisme ni système nerveux.
-Rupture d'onde ≠ FV clinique : on mesure la fragmentation d'un front d'onde sur ordinateur, pas une fibrillation ventriculaire clinique.
-Pas de prédiction médicale : les études cliniques (comme le suivi sur 6 ans de 74 patients porteurs de DAI) montrent que la pente ne prédit ni la mortalité ni les chocs. Ce dépôt est un banc de test biophysique, pas un outil médical.
+Simulation uniquement : mesure la fragmentation d'un front d'onde sur ordinateur, pas une fibrillation ventriculaire clinique.
+
 
 Structure du code et exécution
 
