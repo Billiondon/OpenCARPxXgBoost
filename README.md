@@ -1,8 +1,6 @@
 # La pente de restitution suffit-elle à prédire la rupture d'onde cardiaque ?
 
-Banc d'essai en simulation 2D (openCARP) et analyse par machine learning explicable (XGBoost / SHAP).
-
-## Le problème médical
+## Le gap médical
 
 Chaque année, 4 à 5 millions de personnes décèdent de mort subite cardiaque dans le monde. Dans la majorité des cas, ce décès est provoqué par une fibrillation ventriculaire (FV) : l'onde électrique qui synchronise les ventricules se brise en plusieurs tourbillons chaotiques, empêchant le cœur de pomper le sang.
 
