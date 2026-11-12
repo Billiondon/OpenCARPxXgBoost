@@ -62,27 +62,30 @@ Analyse des résultats (XGBoost et SHAP):
 Après avoir entraîné le modèle XGBoost sur nos 200 plaques virtuelles, voici le poids réel de chaque paramètre dans la prédiction d'une rupture d'onde :
 
 1. pente_dyn (Pente dynamique) : 47,14 %
+2. 
 C'est le facteur numéro un, loin devant les autres. C'est la pente mesurée quand on accélère le rythme progressivement (avec l'effet mémoire déjà intégré).
 
-2. pente_S1_S2 (Pente stationnaire) : 29,29 %
+3. pente_S1_S2 (Pente stationnaire) : 29,29 %
+4. 
 C'est le deuxième critère le plus lourd. Il correspond à la mesure classique sur un battement isolé.
 
-3. indice_memoire (Mémoire cardiaque) : 13,08 %
+5. indice_memoire (Mémoire cardiaque) : 13,08 %
+6. 
 L'écart entre les deux courbes (la mémoire pure du tissu) joue un rôle réel, mais secondaire.
 
-4. cv_restitution (Vitesse de conduction) : 10,49 %
+7. cv_restitution (Vitesse de conduction) : 10,49 %
+   
 Le ralentissement de l'onde électrique pèse moins lourd que prévu dans ce modèle.
 
+
 Ce que montrent les graphiques SHAP
-
 Les valeurs SHAP permettent de voir comment chaque paramètre pousse le cœur vers la cassure ou vers la stabilité, plaque par plaque :
-
-- Quand la pente dynamique (pente_dyn) est élevée, les valeurs SHAP basculent fortement du côté positif : le risque de rupture explose.
+- Quand la pente dynamique est élevée, les valeurs SHAP basculent fortement du côté positif : le risque de rupture explose.
 - Les deux pentes réunies (dynamique et S1-S2) pèsent pour plus de 76 % de la décision totale du modèle.
 - L'indice de mémoire (13 %) et la vitesse de conduction (10 %) n'agissent pas seuls, mais ils viennent nuancer la décision : sur certaines plaques à la limite, une forte mémoire suffit à faire basculer l'onde dans la rupture.
 
-Ce qu'il faut retenir de nos simulations
 
+Ce qu'il faut retenir de nos simulations
 Dans notre configuration sur 200 plaques 2D, la pente de restitution reste le moteur principal de la cassure électrique. Toutefois, ce n'est pas la vieille pente statique seule (S1-S2) qui domine, mais bien la pente dynamique (47 %), c'est-à-dire la réaction du cœur quand il est déjà fatigué par un rythme rapide. La mémoire cardiaque et la vitesse de conduction complètent le tableau (environ 24 % à elles deux), confirmant qu'un modèle multi-critères prédit mieux l'instabilité qu'un chiffre isolé.
 
 
