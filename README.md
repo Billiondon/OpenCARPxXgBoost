@@ -1,7 +1,6 @@
 La pente de restitution suffit-elle à prédire la rupture d'onde cardiaque ?
 
 Le problème médical:
-
 Chaque année, 4 à 5 millions de personnes décèdent de mort subite cardiaque. Dans la majorité des cas, ces décès sont la conséquence de la fibrillation ventriculaire (FV).
 
 Pour prévenir ce trouble chez les personnes à haut risque, les médecins implantent un défibrillateur automatique (DAI) pour délivrer un choc salvateur en quelques secondes dès qu'une FV démarre. Mais la décision d'implanter le DAI se base sur un critère de faible sensibilité et spécificité à la FV : la fraction d'éjection (FEVG). Ainsi, beaucoup de morts subites ont lieu alors que la FEVG était normale, et une bonne partie des patients portant un DAI ne déclenche jamais d'arythmie de leur vie.
@@ -10,14 +9,14 @@ Pour comprendre les mécanismes invisibles de l'arrêt cardiaque, une formalisat
 
 Cependant, ce critère présente en pratique les mêmes limites que le critère de référence : des cœurs tremblent alors que la règle dit qu'ils ne devraient pas, et des cœurs restent stables alors que la règle dit qu'ils devraient trembler.
 
-L'objectif du projet:
 
+L'objectif du projet:
 Le projet répond donc à une question simple : qu'est-ce qui déclenche vraiment la rupture électrique ? La simple pente de départ, ou la mémoire et les caractéristiques du tissu ?
 
 Pour cela, je combine une simulation in silico robuste (openCARP) à un modèle ML prédictif (XGBoost) avec SHAP. L'objectif n'est pas de démontrer une capacité à entraîner une IA, mais d'utiliser l'explicabilité (SHAP) pour hiérarchiser le poids réel de chaque mécanisme physiologique dans la cassure de l'onde.
 
-Le protocole en 4 étapes
 
+Le protocole en 4 étapes
 Étape 1 : Mesurer la pente de restitution (1D)
 On prend un fil de cœur de 2 cm dans openCARP (modèle Ten Tusscher).
 On lance un protocole S1-S2 : des battements réguliers, puis un battement prématuré.
@@ -57,8 +56,8 @@ Cas témoins observés en 2D
 | **C3** | Pente > 1 + CV constante | `> 1` | `1` | **Stabilité malgré pente > 1** |
 | **C4** | Pente < 1 + Tissu coupé en 2 | `< 1` | `> 1` | **Rupture malgré pente < 1** |
 
-Analyse des résultats (XGBoost et SHAP):
 
+Analyse des résultats (XGBoost et SHAP):
 Après avoir entraîné le modèle XGBoost sur nos 200 plaques virtuelles, voici le poids réel de chaque paramètre dans la prédiction d'une rupture d'onde :
 
 1. pente_dyn (Pente dynamique) : 47,14 %
@@ -78,7 +77,7 @@ L'écart entre les deux courbes (la mémoire pure du tissu) joue un rôle réel,
 Le ralentissement de l'onde électrique pèse moins lourd que prévu dans ce modèle.
 
 
-Ce que montrent les graphiques SHAP
+Ce que montrent les graphiques SHAP:
 Les valeurs SHAP permettent de voir comment chaque paramètre pousse le cœur vers la cassure ou vers la stabilité, plaque par plaque :
 - Quand la pente dynamique est élevée, les valeurs SHAP basculent fortement du côté positif : le risque de rupture explose.
 - Les deux pentes réunies (dynamique et S1-S2) pèsent pour plus de 76 % de la décision totale du modèle.
@@ -97,7 +96,6 @@ Limites du modèle:
 
 
 Structure du code et exécution:
-
 scripts/01_restitution_S1S2.py : Étape 1 (pente stationnaire 1D)
 scripts/02_restitution_dynamique.py : Étape 2 (mémoire et restitution de vitesse 1D)
 scripts/03_cohort_2D.py : Étape 3 (génération et simulation des 200 plaques 2D)
